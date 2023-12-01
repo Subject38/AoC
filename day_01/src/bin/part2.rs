@@ -53,9 +53,8 @@ fn part2(input: &str) -> usize {
     let mut sum = 0;
     for line in input.split("\n") {
         let characters: Vec<char> = line.chars().collect();
-        let mut found_first: u8 = 0;
-        let mut cur_num = 0;
         let mut first_digit = 0;
+        let mut last_digit = 0;
         for index in 0..characters.len() {
             let mut chars_iter = characters[index..].iter().peekable();
             let tmp_num = parse_num!(chars_iter, {
@@ -127,14 +126,83 @@ fn part2(input: &str) -> usize {
                 '9' => 9,
             });
             if tmp_num != 0 {
-                cur_num = tmp_num;
-                if found_first == 0 {
-                    found_first = 1;
-                    first_digit = cur_num;
-                }
+                first_digit = tmp_num;
+                break;
             }
         }
-        let last_digit = cur_num;
+        for index in 0..characters.len() {
+            let mut chars_iter = characters[..characters.len()-index].iter().rev().peekable();
+            let tmp_num = parse_num!(chars_iter, {
+                'e' => {
+                    'e' => {
+                        'r' => {
+                            'h' => {
+                                't' => 3,
+                            },
+                        },
+                    },
+                    'n' => {
+                        'i' => {
+                            'n' => 9,
+                        },
+                        'o' => 1,
+                    },
+                    'v' => {
+                        'i' => {
+                            'f' => 5,
+                        },
+                    },
+                },
+                'x' => {
+                    'i' => {
+                        's' => 6,
+                    },
+                },
+                'o' => {
+                    'w' => {
+                        't' => 2,
+                    },
+                },
+                'r' => {
+                    'u' => {
+                        'o' => {
+                            'f' => 4,
+                        },
+                    },
+                },
+                'n' => {
+                    'e' => {
+                        'v' => {
+                            'e' => {
+                                's' => 7,
+                            },
+                        },
+                    },
+                },
+                't' => {
+                    'h' => {
+                        'g' => {
+                            'i' => {
+                                'e' => 8,
+                            },
+                        },
+                    },
+                },
+                '1' => 1,
+                '2' => 2,
+                '3' => 3,
+                '4' => 4,
+                '5' => 5,
+                '6' => 6,
+                '7' => 7,
+                '8' => 8,
+                '9' => 9,
+            });
+            if tmp_num != 0 {
+                last_digit = tmp_num;
+                break;
+            }
+        }
         sum += first_digit * 10 + last_digit;
     }
     sum as usize
