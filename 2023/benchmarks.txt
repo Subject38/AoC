@@ -1,6 +1,9 @@
 Benchmarks run on linux desktop with an i7-7700 and 16GB of RAM.
 
 day_01    fastest       │ slowest       │ median        │ mean          │ samples │ iters
-├─ part1  45.02 µs      │ 83.28 µs      │ 45.94 µs      │ 46.94 µs      │ 100     │ 100
-╰─ part2  197.4 µs      │ 301.4 µs      │ 211 µs        │ 213 µs        │ 100     │ 100
+├─ part1  44.98 µs      │ 80.54 µs      │ 45.6 µs       │ 46.67 µs      │ 100     │ 100
+╰─ part2  200.9 µs      │ 298.6 µs      │ 202.8 µs      │ 208.1 µs      │ 100     │ 100
 
+day_02    fastest       │ slowest       │ median        │ mean          │ samples │ iters
+├─ part1  68.2 µs       │ 114.4 µs      │ 68.93 µs      │ 71 µs         │ 100     │ 100
+╰─ part2  80.67 µs      │ 130.9 µs      │ 81.63 µs      │ 82.77 µs      │ 100     │ 100
