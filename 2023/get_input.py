@@ -10,8 +10,8 @@ args = parser.parse_args()
 day: str = args.day
 verbose: bool = args.verbose
 
-with open(f"{day}/input.txt", "w") as f:
-    problem_input = requests.get(f"https://adventofcode.com/2023/day/{int(day[-2:])}/input", cookies={"session": environ["ADVENT_SESSION"]}).text
+with open(f"day_{day}/input.txt", "w") as f:
+    problem_input = requests.get(f"https://adventofcode.com/2023/day/{int(day)}/input", cookies={"session": environ["ADVENT_SESSION"]}).text
     if verbose:
         print(problem_input)
     f.write(problem_input)
