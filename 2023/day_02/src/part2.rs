@@ -1,9 +1,7 @@
 use crate::custom_error::AocError;
 
 #[tracing::instrument]
-fn parse_line(
-    line: &str
-) -> usize {
+fn parse_line(line: &str) -> usize {
     let mut max_num_red: usize = 0;
     let mut max_num_green: usize = 0;
     let mut max_num_blue: usize = 0;
@@ -20,18 +18,18 @@ fn parse_line(
                     if num_of_color > max_num_red {
                         max_num_red = num_of_color;
                     }
-                },
+                }
                 "green" => {
                     if num_of_color > max_num_green {
                         max_num_green = num_of_color;
                     }
-                },
+                }
                 "blue" => {
                     if num_of_color > max_num_blue {
                         max_num_blue = num_of_color;
                     }
-                },
-                _ => unreachable!()
+                }
+                _ => unreachable!(),
             }
         }
     }
@@ -39,9 +37,7 @@ fn parse_line(
 }
 
 #[tracing::instrument]
-pub fn process(
-    input: &str,
-) -> miette::Result<String, AocError> {
+pub fn process(input: &str) -> miette::Result<String, AocError> {
     Ok(format!("{}", input.lines().map(parse_line).sum::<usize>()))
 }
 

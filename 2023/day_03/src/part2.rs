@@ -22,7 +22,11 @@ fn parse_number(x: usize, y: usize, matrix: &[&[char]]) -> usize {
         cur_x += 1;
         end_x = matrix[y].len() - 1
     }
-    matrix[y][start_x..=end_x].iter().collect::<String>().parse().unwrap()
+    matrix[y][start_x..=end_x]
+        .iter()
+        .collect::<String>()
+        .parse()
+        .unwrap()
 }
 
 fn find_number_locations(adj_list: &[Vec<char>]) -> Vec<[i32; 2]> {
@@ -64,52 +68,61 @@ fn find_number_locations(adj_list: &[Vec<char>]) -> Vec<[i32; 2]> {
 }
 
 fn gear_ratio(x: usize, y: usize, matrix: &[&[char]]) -> usize {
-    let mut found_digits = vec![vec!['.', '.', '.'], vec!['.', '.', '.'], vec!['.', '.', '.']];
+    let mut found_digits = vec![
+        vec!['.', '.', '.'],
+        vec!['.', '.', '.'],
+        vec!['.', '.', '.'],
+    ];
     if y > 0 {
-        if x > 0 && matrix[y-1][x-1].is_ascii_digit() {
-            found_digits[0][0] = matrix[y-1][x-1];
+        if x > 0 && matrix[y - 1][x - 1].is_ascii_digit() {
+            found_digits[0][0] = matrix[y - 1][x - 1];
         }
-        if matrix[y-1][x].is_ascii_digit() {
-            found_digits[0][1] = matrix[y-1][x];
+        if matrix[y - 1][x].is_ascii_digit() {
+            found_digits[0][1] = matrix[y - 1][x];
         }
-        if x < matrix[y].len() - 1 && matrix[y-1][x+1].is_ascii_digit() {
-            found_digits[0][2] = matrix[y-1][x+1];
+        if x < matrix[y].len() - 1 && matrix[y - 1][x + 1].is_ascii_digit() {
+            found_digits[0][2] = matrix[y - 1][x + 1];
         }
     }
-    if x > 0 && matrix[y][x-1].is_ascii_digit() {
-        found_digits[1][0] = matrix[y][x-1];
+    if x > 0 && matrix[y][x - 1].is_ascii_digit() {
+        found_digits[1][0] = matrix[y][x - 1];
     }
-    if x < matrix[y].len() - 1 && matrix[y][x+1].is_ascii_digit() {
-        found_digits[1][2] = matrix[y][x+1];
+    if x < matrix[y].len() - 1 && matrix[y][x + 1].is_ascii_digit() {
+        found_digits[1][2] = matrix[y][x + 1];
     }
     if y < matrix.len() - 1 {
-        if x > 0 && matrix[y+1][x-1].is_ascii_digit() {
-            found_digits[2][0] = matrix[y+1][x-1];
+        if x > 0 && matrix[y + 1][x - 1].is_ascii_digit() {
+            found_digits[2][0] = matrix[y + 1][x - 1];
         }
-        if matrix[y+1][x].is_ascii_digit() {
-            found_digits[2][1] = matrix[y+1][x];
+        if matrix[y + 1][x].is_ascii_digit() {
+            found_digits[2][1] = matrix[y + 1][x];
         }
-        if x < matrix[y].len() - 1 && matrix[y+1][x+1].is_ascii_digit() {
-            found_digits[2][2] = matrix[y+1][x+1];
+        if x < matrix[y].len() - 1 && matrix[y + 1][x + 1].is_ascii_digit() {
+            found_digits[2][2] = matrix[y + 1][x + 1];
         }
     }
     let mut gear_tuple = [0, 0];
-    for (index, location) in find_number_locations(found_digits.as_slice()).iter().enumerate() {
+    for (index, location) in find_number_locations(found_digits.as_slice())
+        .iter()
+        .enumerate()
+    {
         let [y_mod, x_mod] = location;
         if location != &[-1, -1] {
-            assert!(matrix[y+*y_mod as usize - 1][x+*x_mod as usize-1].is_ascii_digit());
-            gear_tuple[index] = parse_number(x+*x_mod as usize-1, y+*y_mod as usize-1, matrix)
+            assert!(matrix[y + *y_mod as usize - 1][x + *x_mod as usize - 1].is_ascii_digit());
+            gear_tuple[index] =
+                parse_number(x + *x_mod as usize - 1, y + *y_mod as usize - 1, matrix)
         }
     }
     gear_tuple[0] * gear_tuple[1]
 }
 
 #[tracing::instrument]
-pub fn process(
-    input: &str,
-) -> miette::Result<String, AocError> {
+pub fn process(input: &str) -> miette::Result<String, AocError> {
     let input_chars = input.chars().collect::<Vec<char>>();
-    let char_matrix = input_chars.as_slice().split(|c| *c == '\n').collect::<Vec<_>>();
+    let char_matrix = input_chars
+        .as_slice()
+        .split(|c| *c == '\n')
+        .collect::<Vec<_>>();
     let mut sum = 0;
     for (y, line) in char_matrix.iter().enumerate() {
         for (x, chara) in line.iter().enumerate() {
