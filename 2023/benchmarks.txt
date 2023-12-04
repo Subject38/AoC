@@ -11,3 +11,16 @@ day_02    fastest       │ slowest       │ median        │ mean          �
 day_03    fastest       │ slowest       │ median        │ mean          │ samples │ iters
 ├─ part1  101.1 µs      │ 202 µs        │ 102.2 µs      │ 105.7 µs      │ 100     │ 100
 ╰─ part2  91.84 µs      │ 223.5 µs      │ 92.58 µs      │ 97.02 µs      │ 100     │ 100
+
+Macbook running Fedora 39 Asahi Linux. M1 8GB RAM. Almost nothing else running on it and plugged into wall power.
+day_01    fastest       │ slowest       │ median        │ mean          │ samples │ iters
+├─ part1  47.33 µs      │ 66.08 µs      │ 47.45 µs      │ 48.07 µs      │ 100     │ 100
+╰─ part2  208 µs        │ 333.2 µs      │ 260.1 µs      │ 268 µs        │ 100     │ 100
+
+day_02    fastest       │ slowest       │ median        │ mean          │ samples │ iters
+├─ part1  83.45 µs      │ 315 µs        │ 83.78 µs      │ 93.02 µs      │ 100     │ 100
+╰─ part2  90.28 µs      │ 151.9 µs      │ 90.54 µs      │ 100.2 µs      │ 100     │ 100
+
+day_03    fastest       │ slowest       │ median        │ mean          │ samples │ iters
+├─ part1  80.95 µs      │ 189 µs        │ 83.62 µs      │ 117.9 µs      │ 100     │ 100
+╰─ part2  123.9 µs      │ 166.3 µs      │ 125.2 µs      │ 129.8 µs      │ 100     │ 100
