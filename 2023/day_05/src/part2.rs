@@ -88,7 +88,7 @@ impl Farm {
     }
     
     pub fn get_min_location_num(&self) -> u32 {
-        self.seeds.clone().iter().enumerate().map(|(index, range)| {
+        self.seeds.iter().enumerate().map(|(index, range)| {
             eprintln!("consuming range number: {}", index);
             range.clone().into_par_iter().progress().map(|seed| {
                 self.get_location_for_seed(seed)
