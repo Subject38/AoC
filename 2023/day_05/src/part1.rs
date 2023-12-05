@@ -1,12 +1,13 @@
-use std::str::Lines;
 use std::iter::Peekable;
+use std::str::Lines;
 
 use crate::custom_error::AocError;
 
 fn parse_numbers_to_vec(num_string: &str) -> Vec<u32> {
-    num_string.split_whitespace()
-    .map(|s| s.parse().unwrap())
-    .collect()
+    num_string
+        .split_whitespace()
+        .map(|s| s.parse().unwrap())
+        .collect()
 }
 
 struct FarmMap {
@@ -19,7 +20,7 @@ impl FarmMap {
     pub fn get(&self, input: u32) -> u32 {
         for index in 0..self.ranges.len() {
             if input >= self.sources[index] && self.sources[index] + self.ranges[index] > input {
-                return self.dests[index] + input - self.sources[index]
+                return self.dests[index] + input - self.sources[index];
             }
         }
         input
@@ -108,12 +109,13 @@ impl Farm {
 }
 
 #[tracing::instrument]
-pub fn process(
-    input: &str,
-) -> miette::Result<String, AocError> {
+pub fn process(input: &str) -> miette::Result<String, AocError> {
     let farm = Farm::parse(input);
 
-    Ok(format!("{}", farm.get_locations_for_seed().iter().min().unwrap()))
+    Ok(format!(
+        "{}",
+        farm.get_locations_for_seed().iter().min().unwrap()
+    ))
 }
 
 #[cfg(test)]

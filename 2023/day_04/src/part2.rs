@@ -26,7 +26,11 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
     for (index, line) in input.lines().enumerate() {
         let found_nums = get_points(line);
         let num_to_add = card_totals[index];
-        for item in card_totals.iter_mut().take(index + found_nums + 1).skip(index+1) {
+        for item in card_totals
+            .iter_mut()
+            .take(index + found_nums + 1)
+            .skip(index + 1)
+        {
             *item += num_to_add;
         }
     }

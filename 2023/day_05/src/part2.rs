@@ -1,27 +1,32 @@
-use std::str::Lines;
+use indicatif::ParallelProgressIterator;
+use rayon::prelude::*;
 use std::iter::Peekable;
 use std::ops::Range;
-use rayon::prelude::*;
-use indicatif::ParallelProgressIterator;
+use std::str::Lines;
 
 use crate::custom_error::AocError;
 
 fn parse_numbers_to_range_vec(num_string: &str) -> Vec<Range<u32>> {
-    let num_vec:Vec<u32> = num_string.split_whitespace()
-    .map(|s| s.parse().unwrap())
-    .collect();
+    let num_vec: Vec<u32> = num_string
+        .split_whitespace()
+        .map(|s| s.parse().unwrap())
+        .collect();
     let mut range_vec = Vec::new();
     let vec_chunks = num_vec.chunks_exact(2);
     vec_chunks.for_each(|chunk| {
-        range_vec.push(Range { start: chunk[0], end: chunk[0] + chunk[1] })
+        range_vec.push(Range {
+            start: chunk[0],
+            end: chunk[0] + chunk[1],
+        })
     });
     range_vec
 }
 
 fn parse_numbers_to_vec(num_string: &str) -> Vec<u32> {
-    num_string.split_whitespace()
-    .map(|s| s.parse().unwrap())
-    .collect()
+    num_string
+        .split_whitespace()
+        .map(|s| s.parse().unwrap())
+        .collect()
 }
 
 struct FarmMap {
@@ -34,7 +39,7 @@ impl FarmMap {
     pub fn get(&self, input: u32) -> u32 {
         for index in 0..self.ranges.len() {
             if input >= self.sources[index] && self.sources[index] + self.ranges[index] > input {
-                return self.dests[index] + input - self.sources[index]
+                return self.dests[index] + input - self.sources[index];
             }
         }
         input
@@ -86,14 +91,23 @@ impl Farm {
         let humidity = self.temperature_to_humidity.get(temperature);
         self.humidity_to_location.get(humidity)
     }
-    
+
     pub fn get_min_location_num(&self) -> u32 {
-        self.seeds.iter().enumerate().map(|(index, range)| {
-            eprintln!("consuming range number: {}", index);
-            range.clone().into_par_iter().progress().map(|seed| {
-                self.get_location_for_seed(seed)
-            }).min().unwrap()
-        }).min().unwrap()
+        self.seeds
+            .iter()
+            .enumerate()
+            .map(|(index, range)| {
+                eprintln!("consuming range number: {}", index);
+                range
+                    .clone()
+                    .into_par_iter()
+                    .progress()
+                    .map(|seed| self.get_location_for_seed(seed))
+                    .min()
+                    .unwrap()
+            })
+            .min()
+            .unwrap()
     }
 
     pub fn parse(input: &str) -> Self {
@@ -127,9 +141,7 @@ impl Farm {
 }
 
 #[tracing::instrument]
-pub fn process(
-    input: &str,
-) -> miette::Result<String, AocError> {
+pub fn process(input: &str) -> miette::Result<String, AocError> {
     let farm = Farm::parse(input);
 
     Ok(format!("{}", farm.get_min_location_num()))
