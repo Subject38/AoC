@@ -1,8 +1,8 @@
 use std::str::Lines;
 use std::iter::Peekable;
 use std::ops::Range;
-use std::sync::Mutex;
 use rayon::prelude::*;
+use indicatif::ParallelProgressIterator;
 
 use crate::custom_error::AocError;
 
@@ -88,19 +88,12 @@ impl Farm {
     }
     
     pub fn get_min_location_num(&self) -> u32 {
-        let min = Mutex::new(std::u32::MAX);
-        self.seeds.clone().into_par_iter().enumerate().for_each(|(index, range)| {
+        self.seeds.clone().iter().enumerate().map(|(index, range)| {
             eprintln!("consuming range number: {}", index);
-            range.clone().for_each(|seed| {
-                let loc = self.get_location_for_seed(seed);
-                let mut locked_min = min.lock().unwrap();
-                if loc < *locked_min {
-                    *locked_min = loc
-                }
-            });
-        });
-        let real_min = min.lock().unwrap();
-        *real_min
+            range.clone().into_par_iter().progress().map(|seed| {
+                self.get_location_for_seed(seed)
+            }).min().unwrap()
+        }).min().unwrap()
     }
 
     pub fn parse(input: &str) -> Self {
