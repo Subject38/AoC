@@ -5,11 +5,8 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
     let mut sum = 0;
     for line in input.lines() {
         let mut found_nums = 0;
-        let split_text = line.split(':');
-        let line_contents = split_text.last().unwrap();
-        let mut split_text_2 = line_contents.split('|');
-        let winning_nums_str = split_text_2.next().unwrap();
-        let my_nums_str = split_text_2.next().unwrap();
+        let (_, line_contents) = line.split_once(':').unwrap();
+        let (winning_nums_str, my_nums_str) = line_contents.split_once('|').unwrap();
         let winning_nums: Vec<usize> = winning_nums_str
             .split_whitespace()
             .map(|s| s.parse().unwrap())
