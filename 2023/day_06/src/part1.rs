@@ -13,7 +13,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         .split_whitespace()
         .map(|s| s.parse().unwrap())
         .collect::<Vec<u32>>();
-    let cum_sum: u32 = times_vec.iter().zip(distances_vec).map(|(time, distance)| {
+    let product: u32 = times_vec.iter().zip(distances_vec).map(|(time, distance)| {
         let mut num_ways = 0;
         for i in 0..*time {
             if i * (*time - i) > distance {
@@ -23,7 +23,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         num_ways
     }).product();
 
-    Ok(format!("{}", cum_sum))
+    Ok(format!("{}", product))
 }
 
 #[cfg(test)]
