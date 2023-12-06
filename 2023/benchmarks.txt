@@ -18,7 +18,11 @@ day_04    fastest       │ slowest       │ median        │ mean          �
 
 day_05    fastest       │ slowest       │ median        │ mean          │ samples │ iters
 ╰─ part1  43.8 µs       │ 89.45 µs      │ 44.16 µs      │ 46.66 µs      │ 100     │ 100
-part 2 benchmark not complete but runs in about 5 minutes once. lol.
+part 2 benchmark not complete but runs in about 57 seconds once. lol.
+
+day_06    fastest       │ slowest       │ median        │ mean          │ samples │ iters
+├─ part1  353.7 ns      │ 1.739 µs      │ 365.7 ns      │ 382 ns        │ 100     │ 100
+╰─ part2  3.621 ms      │ 4.062 ms      │ 3.844 ms      │ 3.834 ms      │ 100     │ 100
 
 Macbook running Fedora 39 Asahi Linux. M1 8GB RAM. Almost nothing else running on it and plugged into wall power.
 day_01    fastest       │ slowest       │ median        │ mean          │ samples │ iters
