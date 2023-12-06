@@ -9,15 +9,11 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
     time_s.retain(|c| !c.is_whitespace());
     let mut distance_s = distances.to_owned();
     distance_s.retain(|c| !c.is_whitespace());
-        
+
     let time: u64 = time_s.parse().unwrap();
     let distance: u64 = distance_s.parse().unwrap();
-    let first_time = (0..time).find(|i| {
-        i * (time - i) > distance
-    }).unwrap();
-    let last_time = (0..time).rev().find(|i| {
-        i * (time - i) > distance
-    }).unwrap();
+    let first_time = (0..time).find(|i| i * (time - i) > distance).unwrap();
+    let last_time = (0..time).rev().find(|i| i * (time - i) > distance).unwrap();
     Ok(format!("{}", last_time - first_time + 1))
 }
 

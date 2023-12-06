@@ -13,15 +13,20 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         .split_whitespace()
         .map(|s| s.parse().unwrap())
         .collect::<Vec<u32>>();
-    let product: u32 = times_vec.iter().zip(distances_vec).map(|(time, distance)| {
-        let mut num_ways = 0;
-        for i in 0..*time {
-            if i * (*time - i) > distance {
-                num_ways += 1;
-            }
-        }
-        num_ways
-    }).product();
+    let product: u32 = times_vec
+        .iter()
+        .zip(distances_vec)
+        .map(|(time, distance)| {
+            (0..*time)
+                .map(|i| {
+                    if i * (*time - i) > distance {
+                        return 1;
+                    }
+                    0
+                })
+                .sum::<u32>()
+        })
+        .product();
 
     Ok(format!("{}", product))
 }
