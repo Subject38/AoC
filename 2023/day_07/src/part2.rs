@@ -1,16 +1,11 @@
 use crate::custom_error::AocError;
+use itertools::Itertools;
 use std::cmp::Ordering;
-use std::collections::HashMap;
 
 fn strength(hand: &str) -> u32 {
-    let map = hand.chars().fold(HashMap::new(), |mut acc, c| {
-        *acc.entry(c).or_insert(0) += 1;
-        acc
-    });
-    let num_jokers = *map.get(&'1').unwrap_or(&0);
-    let mut sorted_counts = map.values().collect::<Vec<_>>();
-    sorted_counts.sort();
-    sorted_counts.reverse();
+    let map = hand.chars().counts();
+    let num_jokers = map.get(&'1').unwrap_or(&0);
+    let sorted_counts: Vec<&usize> = map.values().sorted().rev().collect();
     match num_jokers {
         5 => 6,
         4 => 6,
