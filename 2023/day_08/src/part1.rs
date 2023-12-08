@@ -1,13 +1,11 @@
 use crate::custom_error::AocError;
 use std::collections::HashMap;
 
-#[derive(Debug)]
 struct Node {
     pub right: String,
     pub left: String,
 }
 
-#[derive(Debug)]
 enum Direction {
     Left,
     Right,
@@ -32,21 +30,23 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
     lines.for_each(|line| {
         let (name, nodes) = line.split_once(" = ").unwrap();
         let (left, right) = nodes.split_once(", ").unwrap();
-        let left_s = left.strip_prefix('(').unwrap().to_owned();
-        let right_s = right.strip_suffix(')').unwrap().to_owned();
-        node_map.insert(name, Node { left: left_s, right: right_s });
+        let left_s = left.strip_prefix('(').unwrap();
+        let right_s = right.strip_suffix(')').unwrap();
+        node_map.insert(
+            name,
+            Node {
+                left: left_s.to_owned(),
+                right: right_s.to_owned(),
+            },
+        );
     });
     let mut count = 0;
     let mut cur_node = "AAA";
     while cur_node != "ZZZ" {
         let direction = &directions[count % directions.len()];
         cur_node = match direction {
-            Left => {
-                &node_map.get(cur_node).unwrap().left
-            },
-            Right => {
-                &node_map.get(cur_node).unwrap().right
-            }
+            Left => &node_map.get(cur_node).unwrap().left,
+            Right => &node_map.get(cur_node).unwrap().right,
         };
         count += 1;
     }
