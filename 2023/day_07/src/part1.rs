@@ -27,7 +27,7 @@ fn strength(hand: &str) -> u32 {
 
 #[tracing::instrument]
 pub fn process(input: &str) -> miette::Result<String, AocError> {
-    let mut hands: Vec<(String, u32)> = input
+    let mut hands: Vec<(String, u32, u32)> = input
         .lines()
         .map(|line| line.split_once(' ').unwrap())
         .map(|(hand, bet)| {
@@ -42,15 +42,15 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
                     _ => c,
                 })
                 .collect::<String>();
-            (transformed_hand, bet.parse().unwrap())
+            let strength = strength(&transformed_hand);
+            (transformed_hand, bet.parse().unwrap(), strength)
         })
         .collect();
     hands.sort_by(|h1, h2| {
-        let (s1, s2) = (strength(&h1.0), strength(&h2.0));
-        if s1 == s2 {
+        if h1.2 == h2.2 {
             return h1.0.cmp(&h2.0);
         }
-        if s1 > s2 {
+        if h1.2 > h2.2 {
             return Ordering::Greater;
         }
         Ordering::Less
