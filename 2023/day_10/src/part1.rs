@@ -69,9 +69,6 @@ fn get_possible_directions(adjacent_chars: &[char], cur_char: char) -> Vec<usize
                 },
             }
         }
-        if *c == 'S' {
-            possible_directions.push(direction)
-        }
     }
     possible_directions
 }
@@ -110,6 +107,15 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
     let mut adjacent_chars = get_adjacent_chars(start_y, start_x, &grid);
     let direction_offsets = [(-1, 0), (0, 1), (1, 0), (0, -1)];
     let mut possible_directions = get_possible_directions(&adjacent_chars, 'S');
+    let new_start_char = match possible_directions[..] {
+        [0, 2] => '|',
+        [1, 3] => '-',
+        [2, 3] => '7',
+        [1, 2] => 'F',
+        [0, 1] => 'L',
+        [0, 3] => 'J',  
+        _ => unreachable!()
+    };
     // arbitrarily pick the first possible direction for this iteration
     let mut direction = possible_directions[0];
     let mut cur_char = adjacent_chars[direction];
@@ -118,7 +124,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         start_x as i32 + direction_offsets[direction].1,
     );
     let mut count = 1;
-    while cur_char != 'S' {
+    while (cur_y != start_y as i32) || (cur_x != start_x as i32) {
         let from_direction = match direction {
             0 => 2,
             1 => 3,
@@ -127,6 +133,7 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
             _ => unreachable!(),
         };
         adjacent_chars = get_adjacent_chars(cur_y as usize, cur_x as usize, &grid);
+        adjacent_chars.iter_mut().for_each(|c| if *c == 'S' {*c = new_start_char});
         possible_directions = get_possible_directions(&adjacent_chars, cur_char);
         direction = *possible_directions
             .iter()
@@ -139,7 +146,6 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         );
         count += 1;
     }
-    println!("{count}");
     Ok(format!("{}", (count) / 2))
 }
 
