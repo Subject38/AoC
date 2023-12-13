@@ -4,14 +4,15 @@ fn check_line_valid(line: &str) -> bool {
     let (pattern, vals) = line.split_once(' ').expect("Should only be one space");
     let mut springs = pattern.split('.').collect::<Vec<&str>>();
     springs.retain(|&s| s != "");
-    let counts = vals.split(',').map(|s| s.parse().unwrap()).collect::<Vec<usize>>();
+    let counts = vals
+        .split(',')
+        .map(|s| s.parse().unwrap())
+        .collect::<Vec<usize>>();
     counts.is_empty()
 }
 
 #[tracing::instrument]
-pub fn process(
-    input: &str,
-) -> miette::Result<String, AocError> {
+pub fn process(input: &str) -> miette::Result<String, AocError> {
     for line in input.lines() {
         check_line_valid(line);
     }
