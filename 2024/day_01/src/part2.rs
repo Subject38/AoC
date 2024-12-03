@@ -1,20 +1,26 @@
-use itertools::Itertools;
-use counter::Counter;
 use crate::custom_error::AocError;
+use counter::Counter;
+use itertools::Itertools;
 
 #[tracing::instrument]
-pub fn process(
-    input: &str,
-) -> miette::Result<String, AocError> {
+pub fn process(input: &str) -> miette::Result<String, AocError> {
     let mut vector = vec![];
     let mut counter: Counter<usize, usize> = Counter::new();
     for line in input.lines() {
-        let (num1, num2) = line.split_whitespace().map(|i| i.parse::<usize>().unwrap()).collect_tuple().unwrap();
+        // TODO: get rid of ugly unwraps maybe
+        let (num1, num2) = line
+            .split_whitespace()
+            .map(|i| i.parse::<usize>().unwrap())
+            .collect_tuple()
+            .unwrap();
         vector.push(num1);
         counter[&num2] += 1;
     }
     vector.sort();
-    Ok(format!("{}", vector.iter().fold(0, |acc, num| acc + num * counter[num])))
+    Ok(format!(
+        "{}",
+        vector.iter().fold(0, |acc, num| acc + num * counter[num])
+    ))
 }
 
 #[cfg(test)]
