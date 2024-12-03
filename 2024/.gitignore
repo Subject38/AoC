@@ -1,0 +1,4 @@
+target
+day_*.bench.txt
+perf.data*
+*.sh
