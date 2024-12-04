@@ -1,5 +1,5 @@
 use crate::custom_error::AocError;
-use diagonal::{diagonal_pos_pos, diagonal_pos_neg, straight_x, straight_y};
+use diagonal::{diagonal_pos_neg, diagonal_pos_pos, straight_x, straight_y};
 
 fn check_rows(matrix: &[Vec<&char>], pattern: &[char]) -> usize {
     let mut res = 0;
@@ -9,11 +9,7 @@ fn check_rows(matrix: &[Vec<&char>], pattern: &[char]) -> usize {
             if **c == pattern[cur_index] {
                 cur_index += 1
             } else {
-                cur_index = if **c == pattern[0] {
-                    1
-                } else {
-                    0
-                }
+                cur_index = if **c == pattern[0] { 1 } else { 0 }
             }
             if cur_index == pattern.len() {
                 cur_index = 0;
@@ -25,11 +21,12 @@ fn check_rows(matrix: &[Vec<&char>], pattern: &[char]) -> usize {
 }
 
 #[tracing::instrument]
-pub fn process(
-    input: &str,
-) -> miette::Result<String, AocError> {
+pub fn process(input: &str) -> miette::Result<String, AocError> {
     // input is always a square matrix
-    let matrix: Vec<Vec<char>> = input.lines().map(|l| l.chars().collect::<Vec<char>>()).collect();
+    let matrix: Vec<Vec<char>> = input
+        .lines()
+        .map(|l| l.chars().collect::<Vec<char>>())
+        .collect();
     let mut count = 0;
     // look for XMAS
     let straight_x_mat = straight_x(&matrix);
