@@ -9,6 +9,7 @@ pub fn process(_input: &str) -> miette::Result<String, AocError> {
 mod tests {
     use super::*;
 
+    #[ignore]
     #[test]
     fn test_process() -> miette::Result<()> {
         todo!("haven't built test yet");

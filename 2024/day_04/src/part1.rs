@@ -27,22 +27,18 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         .lines()
         .map(|l| l.chars().collect::<Vec<char>>())
         .collect();
-    let mut count = 0;
     // look for XMAS
-    let straight_x_mat = straight_x(&matrix);
-    let straight_y_mat = straight_y(&matrix);
-    let diagonal_pos_mat = diagonal_pos_pos(&matrix);
-    let diagonal_neg_mat = diagonal_pos_neg(&matrix);
-    let xmas = "XMAS".chars().collect::<Vec<char>>();
-    count += check_rows(&straight_x_mat, &xmas);
-    count += check_rows(&straight_y_mat, &xmas);
-    count += check_rows(&diagonal_pos_mat, &xmas);
-    count += check_rows(&diagonal_neg_mat, &xmas);
-    let samx = "SAMX".chars().collect::<Vec<char>>();
-    count += check_rows(&straight_x_mat, &samx);
-    count += check_rows(&straight_y_mat, &samx);
-    count += check_rows(&diagonal_pos_mat, &samx);
-    count += check_rows(&diagonal_neg_mat, &samx);
+    let xmas = ['X', 'M', 'A', 'S'];
+    let samx = ['S', 'A', 'M', 'X'];
+    let matrices = [
+        straight_x(&matrix),
+        straight_y(&matrix),
+        diagonal_pos_pos(&matrix),
+        diagonal_pos_neg(&matrix),
+    ];
+    let count = matrices.iter().fold(0, |acc, mat| {
+        acc + check_rows(mat, &xmas) + check_rows(mat, &samx)
+    });
     Ok(format!("{count}"))
 }
 
