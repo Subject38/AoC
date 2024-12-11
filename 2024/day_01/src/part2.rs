@@ -5,7 +5,7 @@ use itertools::Itertools;
 #[tracing::instrument]
 pub fn process(input: &str) -> miette::Result<String, AocError> {
     let mut vector = vec![];
-    let mut counter: Counter<usize, usize> = Counter::new();
+    let mut counter: Counter<_> = Counter::new();
     for line in input.lines() {
         // TODO: get rid of ugly unwraps maybe
         let (num1, num2) = line
