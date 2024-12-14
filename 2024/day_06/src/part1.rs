@@ -16,13 +16,7 @@ enum Marker {
 const DIRECTIONS: [(i8, i8); 4] = [(-1, 0), (0, 1), (1, 0), (0, -1)];
 
 fn check_bounds(mat: &[Vec<Marker>], i: usize, j: usize) -> bool {
-    match mat.get(i) {
-        Some(row) => match row.get(j) {
-            Some(_) => true,
-            None => false,
-        },
-        None => false,
-    }
+    mat.get(i).is_some_and(|row| row.get(j).is_some())
 }
 
 fn change_direction(direction: Marker) -> Marker {
@@ -36,7 +30,7 @@ fn change_direction(direction: Marker) -> Marker {
     }
 }
 
-fn simulate(mat: &mut Vec<Vec<Marker>>, i: usize, j: usize) -> (Marker, usize, usize) {
+fn simulate(mat: &mut [Vec<Marker>], i: usize, j: usize) -> (Marker, usize, usize) {
     use Marker::*;
     let new_loc = match mat[i][j] {
         North | East | South | West => {
@@ -45,7 +39,7 @@ fn simulate(mat: &mut Vec<Vec<Marker>>, i: usize, j: usize) -> (Marker, usize, u
                 (i as isize + direction.0 as isize) as usize,
                 (j as isize + direction.1 as isize) as usize,
             );
-            if check_bounds(&mat, new_i, new_j) {
+            if check_bounds(mat, new_i, new_j) {
                 match mat[new_i][new_j] {
                     Obstacle => (change_direction(mat[i][j]), i, j),
                     Visited | Empty => (mat[i][j], new_i, new_j),

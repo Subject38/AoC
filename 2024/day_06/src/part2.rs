@@ -21,13 +21,7 @@ enum Marker {
 const DIRECTIONS: [(i8, i8); 4] = [(-1, 0), (0, 1), (1, 0), (0, -1)];
 
 fn check_bounds(mat: &[Vec<Marker>], i: usize, j: usize) -> bool {
-    match mat.get(i) {
-        Some(row) => match row.get(j) {
-            Some(_) => true,
-            None => false,
-        },
-        None => false,
-    }
+    mat.get(i).is_some_and(|row| row.get(j).is_some())
 }
 
 fn change_direction(direction: Direction) -> Direction {
@@ -40,7 +34,7 @@ fn change_direction(direction: Direction) -> Direction {
     }
 }
 
-fn simulate(mat: &mut Vec<Vec<Marker>>, i: usize, j: usize) -> (Marker, usize, usize, bool) {
+fn simulate(mat: &mut [Vec<Marker>], i: usize, j: usize) -> (Marker, usize, usize, bool) {
     // this code is a failed attempt to avoid having to simulate the loops for every location.
     // as far as i can tell this approach is unfixably broken due to several edge cases
     // i didn't consider until it was too late... as such, i am declaring defeat on this problem
@@ -53,7 +47,7 @@ fn simulate(mat: &mut Vec<Vec<Marker>>, i: usize, j: usize) -> (Marker, usize, u
                 (i as isize + direction.0 as isize) as usize,
                 (j as isize + direction.1 as isize) as usize,
             );
-            if check_bounds(&mat, new_i, new_j) {
+            if check_bounds(mat, new_i, new_j) {
                 match mat[new_i][new_j] {
                     Obstacle => {
                         let res = (Guard(change_direction(dir)), i, j, false);
@@ -70,7 +64,7 @@ fn simulate(mat: &mut Vec<Vec<Marker>>, i: usize, j: usize) -> (Marker, usize, u
                             (new_i as isize + offsets.0 as isize) as usize,
                             (new_j as isize + offsets.1 as isize) as usize,
                         );
-                        if check_bounds(&mat, possible_i, possible_j)
+                        if check_bounds(mat, possible_i, possible_j)
                             && Visited(possible) == mat[possible_i][possible_j]
                         {
                             res.3 = true
@@ -120,9 +114,8 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
                         '<' => Guard(West),
                         _ => Invalid,
                     };
-                    match marker {
-                        Guard(_) => guard_loc = (i, j),
-                        _ => {}
+                    if let Guard(_) = marker {
+                        guard_loc = (i, j)
                     };
                     marker
                 })
