@@ -1,6 +1,5 @@
 use crate::custom_error::AocError;
 use itertools::Itertools;
-use rayon::prelude::*;
 
 #[derive(Clone, Copy, Debug)]
 enum Combo {
@@ -175,13 +174,20 @@ pub fn process(input: &str) -> miette::Result<String, AocError> {
         .split(',')
         .map(|num| num.parse().unwrap())
         .collect();
-    // this does not work in any reasonable amount of time lol
-    // the actual value is very large
-    let res = (0..1_000_000)
-        .into_par_iter()
-        .find_first(|reg_a| simulate(&prog, (*reg_a, reg_b, reg_c)) == orig_prog)
-        .unwrap();
-    Ok(res.to_string())
+    let mut index = orig_prog.len() - 1;
+    let mut reg_a = 0;
+    loop {
+        if simulate(&prog, (reg_a, reg_b, reg_c)).get(index) == Some(&orig_prog[index]) {
+            if index == 0 {
+                break;
+            } else {
+                index -= 1
+            }
+        } else {
+            reg_a += 8usize.pow(index as u32)
+        }
+    }
+    Ok(format!("{reg_a}"))
 }
 
 #[cfg(test)]
