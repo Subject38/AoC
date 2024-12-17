@@ -39,7 +39,8 @@ impl Position {
 enum GridObject {
     Wall,
     Robot,
-    Obstacle,
+    ObstacleLeft,
+    ObstacleRight,
     Empty,
 }
 
@@ -57,7 +58,8 @@ impl Display for Grid {
                 .iter()
                 .map(|item| match item {
                     Empty => '.',
-                    Obstacle => 'O',
+                    ObstacleLeft => '[',
+                    ObstacleRight => ']',
                     Wall => '#',
                     Robot => '@',
                 })
@@ -77,7 +79,8 @@ impl Grid {
                     .map(|c| match c {
                         '#' => GridObject::Wall,
                         '@' => GridObject::Robot,
-                        'O' => GridObject::Obstacle,
+                        '[' => GridObject::ObstacleLeft,
+                        ']' => GridObject::ObstacleRight,
                         '.' => GridObject::Empty,
                         _ => unreachable!("invalid grid"),
                     })
@@ -115,7 +118,7 @@ impl Grid {
     }
 
     pub fn move_robot(&mut self, dir: Direction) {
-        let mut new_pos = self.robot_pos.move_to(dir);
+        let new_pos = self.robot_pos.move_to(dir);
         match self.get(new_pos) {
             GridObject::Wall => {} // do nothing at all. easiest one.
             GridObject::Empty => {
@@ -124,20 +127,12 @@ impl Grid {
                 *self.get_mut(new_pos) = GridObject::Robot;
                 self.robot_pos = new_pos;
             }
-            GridObject::Obstacle => {
-                // hard case: Have the robot "push" if there's no Wall blocking the way.
-                // Robot can push multiple obstacles so "@OOO.O#" works. @O# does not though...
-                // in the former case, it becomes ".@OOOO#".
-                while self.get(new_pos) == &GridObject::Obstacle {
-                    new_pos = new_pos.move_to(dir);
-                }
-                if self.get(new_pos) == &GridObject::Empty {
-                    // move the robot and all obstacles in between this spot
-                    *self.get_mut(self.robot_pos) = GridObject::Empty;
-                    *self.get_mut(self.robot_pos.move_to(dir)) = GridObject::Robot;
-                    *self.get_mut(new_pos) = GridObject::Obstacle;
-                    self.robot_pos = self.robot_pos.move_to(dir);
-                }
+            GridObject::ObstacleLeft | GridObject::ObstacleRight => {
+                // This is the ultimate blocker for this part. Even describing
+                // the full behavior and edgecases of this action formally would
+                // take forever. This just about demands fragile spaghetti spewing and
+                // is a miserable exercise... So I'm leaving the current solution here,
+                // for perhaps a smarter and more motivated version of myself to implement...
             }
             GridObject::Robot => unreachable!("Only one robot possible"),
         }
@@ -149,13 +144,13 @@ impl Grid {
             .enumerate()
             .flat_map(|(i, r)| {
                 r.iter().enumerate().map(move |(j, c)| {
-                    if c == &GridObject::Obstacle {
+                    if c == &GridObject::ObstacleLeft {
                         100 * i + j
                     } else {
                         0
                     }
                 })
             })
-            .sum::<usize>()
+            .sum()
     }
 }
